@@ -2,41 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Budget Tracker Design System - Production Ready
+All colors MUST be HSL. Gradient palette: #641220 to #e01e37
 */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Dark mode primary - Budget Tracker gradient palette */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    
+    /* Gradient palette converted to HSL */
+    --gradient-1: 343 69% 16%; /* #641220 */
+    --gradient-2: 340 68% 18%; /* #6e1423 */
+    --gradient-3: 337 67% 22%; /* #85182a */
+    --gradient-4: 334 69% 28%; /* #a11d33 */
+    --gradient-5: 333 69% 30%; /* #a71e34 */
+    --gradient-6: 332 70% 32%; /* #b21e35 */
+    --gradient-7: 331 71% 34%; /* #bd1f36 */
+    --gradient-8: 330 72% 36%; /* #c71f37 */
+    --gradient-9: 0 82% 48%; /* #da1e37 */
+    --gradient-10: 0 82% 50%; /* #e01e37 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Core theme colors */
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 98%;
+    --card-hover: 0 0% 8%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 0 82% 50%; /* Main brand color - gradient-10 */
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 0 82% 45%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 90%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 343 69% 16%; /* gradient-1 for accents */
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
 
-    --radius: 0.5rem;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+
+    --border: 0 0% 14%;
+    --input: 0 0% 12%;
+    --ring: 0 82% 50%;
+
+    --radius: 0.75rem;
+    
+    /* Budget Tracker specific gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--gradient-1)), hsl(var(--gradient-10)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--gradient-3)), hsl(var(--gradient-8)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--gradient-5)), hsl(var(--gradient-9)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--gradient-1)) 0%, hsl(var(--gradient-5)) 25%, hsl(var(--gradient-9)) 75%, hsl(var(--gradient-10)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(var(--accent) / 0.05));
+    
+    /* Floating orbs for footer */
+    --orb-1: radial-gradient(circle, hsl(var(--gradient-9) / 0.3) 0%, transparent 70%);
+    --orb-2: radial-gradient(circle, hsl(var(--gradient-5) / 0.2) 0%, transparent 70%);
+    --orb-3: radial-gradient(circle, hsl(var(--gradient-10) / 0.4) 0%, transparent 70%);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease-out;
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Shadows with brand colors */
+    --shadow-brand: 0 10px 40px -10px hsl(var(--primary) / 0.3);
+    --shadow-card: 0 4px 20px -2px hsl(0 0% 0% / 0.3);
+    --shadow-floating: 0 20px 60px -10px hsl(var(--primary) / 0.2);
 
     --sidebar-background: 0 0% 98%;
 
@@ -92,6 +138,17 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  
+  /* Light mode (optional override) */
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
+    --primary: 0 82% 45%;
+    --muted: 0 0% 94%;
+    --border: 0 0% 88%;
+  }
 }
 
 @layer base {
@@ -100,6 +157,196 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-poppins antialiased;
   }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-1;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-secondary;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
+}
+
+@layer components {
+  /* Button variants using design system */
+  .btn-hero {
+    @apply bg-gradient-to-r from-gradient-1 to-gradient-10 text-primary-foreground 
+           hover:from-gradient-2 hover:to-gradient-9 transition-all duration-300
+           shadow-brand hover:shadow-floating transform hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground border border-border
+           hover:bg-secondary/80 transition-all duration-200;
+  }
+  
+  .btn-ghost {
+    @apply text-muted-foreground hover:text-foreground hover:bg-accent/10
+           transition-all duration-200;
+  }
+  
+  /* Card variants */
+  .card-gradient {
+    @apply bg-gradient-to-br from-card to-accent/5 border border-border/50
+           hover:border-border transition-all duration-300;
+  }
+  
+  .card-floating {
+    @apply bg-card/80 backdrop-blur-sm border border-border/30
+           shadow-card hover:shadow-floating transition-all duration-300
+           transform hover:-translate-y-1;
+  }
+  
+  /* Bento grid system */
+  .bento-grid {
+    @apply grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 
+           2xl:grid-cols-6;
+  }
+  
+  .bento-item-sm {
+    @apply col-span-1 row-span-1;
+  }
+  
+  .bento-item-md {
+    @apply col-span-1 md:col-span-2 row-span-1;
+  }
+  
+  .bento-item-lg {
+    @apply col-span-1 md:col-span-2 lg:col-span-3 row-span-2;
+  }
+  
+  .bento-item-xl {
+    @apply col-span-1 md:col-span-2 lg:col-span-4 xl:col-span-6 row-span-1;
+  }
+  
+  /* Gradient backgrounds */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .bg-gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+  
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  /* Floating orb animations for footer */
+  .floating-orb-1 {
+    background: var(--orb-1);
+    animation: float-1 6s ease-in-out infinite;
+  }
+  
+  .floating-orb-2 {
+    background: var(--orb-2);
+    animation: float-2 8s ease-in-out infinite;
+  }
+  
+  .floating-orb-3 {
+    background: var(--orb-3);
+    animation: float-3 10s ease-in-out infinite;
+  }
+  
+  /* Logo scroll animation */
+  .logo-scroll {
+    animation: scroll-left 30s linear infinite;
+  }
+  
+  /* Chart container styles */
+  .chart-container {
+    @apply bg-card/50 backdrop-blur border border-border/50 rounded-xl p-6
+           hover:bg-card/70 transition-all duration-300;
+  }
+  
+  /* KPI card styles */
+  .kpi-card {
+    @apply bg-gradient-to-br from-card to-accent/5 border border-border/50
+           rounded-xl p-6 hover:border-primary/30 transition-all duration-300
+           transform hover:-translate-y-1 hover:shadow-brand;
+  }
+  
+  /* Interactive elements */
+  .interactive-hover {
+    @apply transition-all duration-200 hover:scale-105 cursor-pointer;
+  }
+  
+  /* Glassmorphism effect */
+  .glass {
+    @apply bg-card/20 backdrop-blur-md border border-border/20;
+  }
+}
+
+@layer utilities {
+  /* Animation keyframes */
+  @keyframes float-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(20px, -30px) scale(1.1); }
+    50% { transform: translate(-15px, 20px) scale(0.9); }
+    75% { transform: translate(25px, 10px) scale(1.05); }
+  }
+  
+  @keyframes float-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-25px, 15px) scale(1.2); }
+    66% { transform: translate(20px, -25px) scale(0.8); }
+  }
+  
+  @keyframes float-3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    20% { transform: translate(15px, -20px) scale(1.15); }
+    40% { transform: translate(-20px, -10px) scale(0.95); }
+    60% { transform: translate(10px, 25px) scale(1.1); }
+    80% { transform: translate(-10px, 15px) scale(0.9); }
+  }
+  
+  @keyframes scroll-left {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+  }
+  
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes parallax-slow {
+    from { transform: translateY(0); }
+    to { transform: translateY(-50px); }
+  }
+  
+  /* Utility classes */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out;
+  }
+  
+  .animate-parallax {
+    animation: parallax-slow 20s ease-in-out infinite alternate;
+  }
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
 }
