@@ -27,12 +27,18 @@ import {
   demoTransactions,
   demoForecastData 
 } from '@/lib/demo-data';
+import CoreAccountingTools from '@/components/calculators/core-accounting-tools';
+import BudgetManagementTools from '@/components/calculators/budget-management-tools';
+import AdvancedFinancialTools from '@/components/calculators/advanced-financial-tools';
+import TransactionManager from '@/components/financial-hub/transaction-manager';
 import { TimeFrame } from '@/types';
 
 export const MainDashboard: React.FC = () => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>('30d');
   const [showCalculator, setShowCalculator] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [activeSection, setActiveSection] = useState('overview');
+  const [transactions, setTransactions] = useState(demoTransactions);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -247,6 +253,34 @@ export const MainDashboard: React.FC = () => {
                 </Tabs>
               </motion.div>
 
+              {/* Financial Hub Sections */}
+              {activeSection === 'calculators' && (
+                <motion.div variants={itemVariants}>
+                  <CoreAccountingTools />
+                </motion.div>
+              )}
+
+              {activeSection === 'budget-tools' && (
+                <motion.div variants={itemVariants}>
+                  <BudgetManagementTools />
+                </motion.div>
+              )}
+
+              {activeSection === 'advanced-tools' && (
+                <motion.div variants={itemVariants}>
+                  <AdvancedFinancialTools />
+                </motion.div>
+              )}
+
+              {activeSection === 'transactions' && (
+                <motion.div variants={itemVariants}>
+                  <TransactionManager 
+                    transactions={transactions}
+                    onTransactionsChange={setTransactions}
+                  />
+                </motion.div>
+              )}
+
               {/* Recent Transactions */}
               <motion.div variants={itemVariants}>
                 <div className="card-gradient rounded-xl p-6">
@@ -297,19 +331,20 @@ export const MainDashboard: React.FC = () => {
               {/* Quick Actions */}
               <motion.div variants={itemVariants} className="card-gradient rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-foreground mb-4">
-                  Quick Actions
+                  Financial Tools Hub
                 </h3>
                 <div className="space-y-3">
                   {[
-                    { icon: Plus, label: 'Add Transaction', color: 'bg-primary' },
-                    { icon: FileText, label: 'Create Report', color: 'bg-success' },
-                    { icon: TrendingUp, label: 'View Analytics', color: 'bg-warning' },
-                    { icon: Settings, label: 'Account Settings', color: 'bg-muted' },
+                    { icon: Calculator, label: 'Core Calculators', section: 'calculators', color: 'bg-blue-500' },
+                    { icon: PieChart, label: 'Budget Tools', section: 'budget-tools', color: 'bg-green-500' },
+                    { icon: TrendingUp, label: 'Advanced Analytics', section: 'advanced-tools', color: 'bg-purple-500' },
+                    { icon: Plus, label: 'Manage Transactions', section: 'transactions', color: 'bg-orange-500' },
                   ].map((action, index) => (
                     <Button
                       key={index}
-                      variant="ghost"
+                      variant={activeSection === action.section ? "default" : "ghost"}
                       className="w-full justify-start p-3 h-auto"
+                      onClick={() => setActiveSection(action.section)}
                     >
                       <div className={`p-2 rounded-lg ${action.color} mr-3`}>
                         <action.icon className="h-4 w-4 text-white" />

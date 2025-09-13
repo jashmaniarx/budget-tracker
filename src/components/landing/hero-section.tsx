@@ -43,7 +43,7 @@ export const HeroSection: React.FC = () => {
         >
           <Badge 
             variant="outline" 
-            className="px-4 py-2 text-sm bg-background/10 backdrop-blur border-primary/20 text-foreground hover:bg-background/20 transition-all duration-300"
+            className="px-4 py-2 text-sm bg-white/20 backdrop-blur border-white/30 text-white hover:bg-white/30 transition-all duration-300 shadow-lg"
           >
             🚀 Production-Ready Financial Dashboard
           </Badge>
