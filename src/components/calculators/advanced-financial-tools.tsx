@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Globe, Scale, Calculator, PieChart, Calendar, FileText, BarChart3, Target, Zap } from 'lucide-react';
+import { TrendingUp, Globe, Scale, Calculator, PieChart, Calendar, FileText, BarChart3, Target, Zap, Maximize, Minimize } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,6 +40,7 @@ interface FinancialRatio {
 
 export const AdvancedFinancialTools: React.FC = () => {
   const [activeTab, setActiveTab] = useState('investment');
+  const [isFullscreen, setIsFullscreen] = useState(false);
   
   // Investment Calculator State
   const [investment, setInvestment] = useState<InvestmentData>({
@@ -233,17 +234,40 @@ export const AdvancedFinancialTools: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
+  const generateReport = () => {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    if (printWindow) {
+      printWindow.document.write('<html><head><title>Advanced Financial Report</title>');
+      printWindow.document.write('<style>body{font-family:Arial,sans-serif;padding:20px;}</style>');
+      printWindow.document.write('</head><body>');
+      printWindow.document.write('<h1>Advanced Financial Analysis Report</h1>');
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
+
   return (
-    <div className="w-full space-y-6">
+    <div className={`w-full space-y-6 transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-6 overflow-auto' : ''}`}>
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Advanced Financial Tools</h2>
           <p className="text-muted-foreground">Professional-grade financial analysis and planning</p>
         </div>
-        <Button variant="outline">
-          <FileText className="h-4 w-4 mr-2" />
-          Generate Report
-        </Button>
+        <div className="flex items-center space-x-2">
+          <Button onClick={toggleFullscreen} variant="outline" size="sm">
+            {isFullscreen ? <Minimize className="h-4 w-4 mr-2" /> : <Maximize className="h-4 w-4 mr-2" />}
+            {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+          </Button>
+          <Button onClick={generateReport} variant="outline">
+            <FileText className="h-4 w-4 mr-2" />
+            Generate Report
+          </Button>
+        </div>
       </div>
 
       {/* Tab Navigation */}

@@ -5,6 +5,7 @@ import TrustedCompanies from '@/components/landing/trusted-companies';
 import FeaturesSection from '@/components/landing/features-section';
 import MainDashboard from '@/components/dashboard/main-dashboard';
 import Footer from '@/components/landing/footer';
+import FloatingBadge from '@/components/ui/floating-badge';
 
 const Index = () => {
   return (
@@ -23,6 +24,9 @@ const Index = () => {
       
       {/* Footer with Floating Orbs and Credit */}
       <Footer />
+
+      {/* Floating Badge */}
+      <FloatingBadge />
 
       {/* Scroll to Top Button */}
       <motion.button

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calculator, DollarSign, Percent, TrendingUp, PiggyBank, Users, Target, Activity, BarChart3, FileText } from 'lucide-react';
+import { Calculator, DollarSign, Percent, TrendingUp, PiggyBank, Users, Target, Activity, BarChart3, FileText, Maximize, Minimize } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -244,25 +244,47 @@ export const CoreAccountingTools: React.FC = () => {
     { id: 'depreciation', name: 'Depreciation', icon: FileText, color: 'bg-gray-500' }
   ];
 
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   const exportToPDF = () => {
     const element = document.getElementById('calculator-results');
     if (element) {
-      // Implementation would use jsPDF or similar
-      console.log('Exporting to PDF...', results);
+      // Create PDF export functionality
+      const printWindow = window.open('', '', 'height=600,width=800');
+      if (printWindow) {
+        printWindow.document.write('<html><head><title>Calculator Results</title>');
+        printWindow.document.write('<style>body{font-family:Arial,sans-serif;padding:20px;}</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write('<h1>Calculator Results</h1>');
+        printWindow.document.write(element.innerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+      }
     }
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
   return (
-    <div className="w-full">
+    <div className={`w-full transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-6 overflow-auto' : ''}`}>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Core Accounting Tools</h2>
           <p className="text-muted-foreground">Professional calculators for financial management</p>
         </div>
-        <Button onClick={exportToPDF} variant="outline">
-          <FileText className="h-4 w-4 mr-2" />
-          Export PDF
-        </Button>
+        <div className="flex items-center space-x-2">
+          <Button onClick={toggleFullscreen} variant="outline" size="sm">
+            {isFullscreen ? <Minimize className="h-4 w-4 mr-2" /> : <Maximize className="h-4 w-4 mr-2" />}
+            {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+          </Button>
+          <Button onClick={exportToPDF} variant="outline">
+            <FileText className="h-4 w-4 mr-2" />
+            Export PDF
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
@@ -403,7 +425,260 @@ export const CoreAccountingTools: React.FC = () => {
             </div>
           )}
 
-          {/* Add other calculator inputs... */}
+          {activeCalculator === 'tax' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Income Amount ($)</Label>
+                <Input
+                  type="number"
+                  value={taxCalc.income}
+                  onChange={(e) => setTaxCalc({ ...taxCalc, income: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Tax Rate (%)</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={taxCalc.taxRate}
+                  onChange={(e) => setTaxCalc({ ...taxCalc, taxRate: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Tax Type</Label>
+                <Select value={taxCalc.taxType} onValueChange={(value) => setTaxCalc({ ...taxCalc, taxType: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="income">Income Tax</SelectItem>
+                    <SelectItem value="vat">VAT/Sales Tax</SelectItem>
+                    <SelectItem value="property">Property Tax</SelectItem>
+                    <SelectItem value="capital">Capital Gains</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={calculateTax} className="w-full">Calculate</Button>
+            </div>
+          )}
+
+          {activeCalculator === 'savings' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Target Amount ($)</Label>
+                <Input
+                  type="number"
+                  value={savingsCalc.target}
+                  onChange={(e) => setSavingsCalc({ ...savingsCalc, target: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Current Savings ($)</Label>
+                <Input
+                  type="number"
+                  value={savingsCalc.current}
+                  onChange={(e) => setSavingsCalc({ ...savingsCalc, current: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Monthly Contribution ($)</Label>
+                <Input
+                  type="number"
+                  value={savingsCalc.monthly}
+                  onChange={(e) => setSavingsCalc({ ...savingsCalc, monthly: e.target.value })}
+                />
+              </div>
+              <Button onClick={calculateSavingsGoal} className="w-full">Calculate</Button>
+            </div>
+          )}
+
+          {activeCalculator === 'compound' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Principal Amount ($)</Label>
+                <Input
+                  type="number"
+                  value={compoundCalc.principal}
+                  onChange={(e) => setCompoundCalc({ ...compoundCalc, principal: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Annual Interest Rate (%)</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={compoundCalc.rate}
+                  onChange={(e) => setCompoundCalc({ ...compoundCalc, rate: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Time Period (Years)</Label>
+                <Input
+                  type="number"
+                  value={compoundCalc.years}
+                  onChange={(e) => setCompoundCalc({ ...compoundCalc, years: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Compounding Frequency</Label>
+                <Select value={compoundCalc.frequency} onValueChange={(value) => setCompoundCalc({ ...compoundCalc, frequency: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">Annually</SelectItem>
+                    <SelectItem value="2">Semi-Annually</SelectItem>
+                    <SelectItem value="4">Quarterly</SelectItem>
+                    <SelectItem value="12">Monthly</SelectItem>
+                    <SelectItem value="365">Daily</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={calculateCompoundInterest} className="w-full">Calculate</Button>
+            </div>
+          )}
+
+          {activeCalculator === 'splitter' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Total Amount ($)</Label>
+                <Input
+                  type="number"
+                  value={splitterCalc.total}
+                  onChange={(e) => setSplitterCalc({ ...splitterCalc, total: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Number of People</Label>
+                <Input
+                  type="number"
+                  min="1"
+                  value={splitterCalc.people}
+                  onChange={(e) => setSplitterCalc({ ...splitterCalc, people: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Tip Percentage (%)</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={splitterCalc.tip}
+                  onChange={(e) => setSplitterCalc({ ...splitterCalc, tip: e.target.value })}
+                />
+              </div>
+              <Button onClick={calculateExpenseSplit} className="w-full">Calculate</Button>
+            </div>
+          )}
+
+          {activeCalculator === 'breakeven' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Fixed Costs ($)</Label>
+                <Input
+                  type="number"
+                  value={breakevenCalc.fixedCosts}
+                  onChange={(e) => setBreakevenCalc({ ...breakevenCalc, fixedCosts: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Variable Cost per Unit ($)</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={breakevenCalc.variableCost}
+                  onChange={(e) => setBreakevenCalc({ ...breakevenCalc, variableCost: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Selling Price per Unit ($)</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={breakevenCalc.price}
+                  onChange={(e) => setBreakevenCalc({ ...breakevenCalc, price: e.target.value })}
+                />
+              </div>
+              <Button onClick={calculateBreakEven} className="w-full">Calculate</Button>
+            </div>
+          )}
+
+          {activeCalculator === 'profit' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Revenue ($)</Label>
+                <Input
+                  type="number"
+                  value={profitCalc.revenue}
+                  onChange={(e) => setProfitCalc({ ...profitCalc, revenue: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Costs ($)</Label>
+                <Input
+                  type="number"
+                  value={profitCalc.costs}
+                  onChange={(e) => setProfitCalc({ ...profitCalc, costs: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Margin Type</Label>
+                <Select value={profitCalc.type} onValueChange={(value) => setProfitCalc({ ...profitCalc, type: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="gross">Gross Margin</SelectItem>
+                    <SelectItem value="net">Net Margin</SelectItem>
+                    <SelectItem value="operating">Operating Margin</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={calculateProfitMargin} className="w-full">Calculate</Button>
+            </div>
+          )}
+
+          {activeCalculator === 'depreciation' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Asset Cost ($)</Label>
+                <Input
+                  type="number"
+                  value={depreciationCalc.cost}
+                  onChange={(e) => setDepreciationCalc({ ...depreciationCalc, cost: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Salvage Value ($)</Label>
+                <Input
+                  type="number"
+                  value={depreciationCalc.salvage}
+                  onChange={(e) => setDepreciationCalc({ ...depreciationCalc, salvage: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Useful Life (Years)</Label>
+                <Input
+                  type="number"
+                  value={depreciationCalc.years}
+                  onChange={(e) => setDepreciationCalc({ ...depreciationCalc, years: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Depreciation Method</Label>
+                <Select value={depreciationCalc.method} onValueChange={(value) => setDepreciationCalc({ ...depreciationCalc, method: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="straight">Straight Line</SelectItem>
+                    <SelectItem value="declining">Declining Balance</SelectItem>
+                    <SelectItem value="units">Units of Production</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={calculateDepreciation} className="w-full">Calculate</Button>
+            </div>
+          )}
         </Card>
 
         {/* Results */}

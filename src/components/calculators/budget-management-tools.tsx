@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { PieChart, BarChart3, TrendingUp, Bell, FileText, CreditCard, PiggyBank, Calendar, DollarSign, Target } from 'lucide-react';
+import { PieChart, BarChart3, TrendingUp, Bell, FileText, CreditCard, PiggyBank, Calendar, DollarSign, Target, Maximize, Minimize } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,7 @@ interface Asset {
 export const BudgetManagementTools: React.FC = () => {
   const [activeTab, setActiveTab] = useState('budget');
   const [income, setIncome] = useState(5000);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   
   // Budget Categories
   const [categories, setCategories] = useState<BudgetCategory[]>([
@@ -146,6 +147,23 @@ export const BudgetManagementTools: React.FC = () => {
     setAssets(updatedAssets);
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
+  const exportReport = () => {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    if (printWindow) {
+      printWindow.document.write('<html><head><title>Budget Management Report</title>');
+      printWindow.document.write('<style>body{font-family:Arial,sans-serif;padding:20px;}</style>');
+      printWindow.document.write('</head><body>');
+      printWindow.document.write('<h1>Budget Management Report</h1>');
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
+
   const tabs = [
     { id: 'budget', name: 'Budget Planner', icon: PieChart },
     { id: 'cashflow', name: 'Cash Flow', icon: TrendingUp },
@@ -155,16 +173,22 @@ export const BudgetManagementTools: React.FC = () => {
   ];
 
   return (
-    <div className="w-full space-y-6">
+    <div className={`w-full space-y-6 transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-50 bg-background p-6 overflow-auto' : ''}`}>
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Budget & Money Management</h2>
           <p className="text-muted-foreground">Comprehensive financial planning tools</p>
         </div>
-        <Button variant="outline">
-          <FileText className="h-4 w-4 mr-2" />
-          Export Report
-        </Button>
+        <div className="flex items-center space-x-2">
+          <Button onClick={toggleFullscreen} variant="outline" size="sm">
+            {isFullscreen ? <Minimize className="h-4 w-4 mr-2" /> : <Maximize className="h-4 w-4 mr-2" />}
+            {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+          </Button>
+          <Button onClick={exportReport} variant="outline">
+            <FileText className="h-4 w-4 mr-2" />
+            Export Report
+          </Button>
+         </div>
       </div>
 
       {/* Tab Navigation */}
